@@ -147,4 +147,27 @@ public class SpecificationServiceImpl implements SpecificationService {
             }
         }
     }
+
+    /**
+     * 规格列表并且只展示未通过审核的
+     * @param page
+     * @param rows
+     * @param specification
+     * @return
+     */
+    @Override
+    public PageResult searchOne(Integer page, Integer rows, Specification specification) {
+        PageHelper.startPage(page,rows);
+        SpecificationQuery specificationQuery = new SpecificationQuery();
+        SpecificationQuery.Criteria criteria = specificationQuery.createCriteria();
+        if (specification.getSpecName()!=null && !"".equals(specification.getSpecName().trim())){
+            criteria.andSpecNameLike("%"+specification.getSpecName().trim()+"%");
+        }
+        criteria.andStatusEqualTo(0);
+        specificationQuery.setOrderByClause("id desc");
+        Page<Specification> p = (Page<Specification>) specificationDao.selectByExample(specificationQuery);
+
+        return new PageResult(p.getTotal(),p.getResult());
+
+    }
 }

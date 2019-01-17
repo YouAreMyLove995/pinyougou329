@@ -27,4 +27,7 @@ public interface PayLogDao {
     int updateByPrimaryKeySelective(PayLog record);
 
     int updateByPrimaryKey(PayLog record);
+
+    //自己写的方法              这个方法好像有点不好使
+    List<PayLog> selectByPayTime(@Param("time") String time);
 }

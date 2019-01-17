@@ -38,4 +38,9 @@ app.service('goodsService',function($http){
 	this.updateIs_marketable = function(ids,is_marketable){
         return $http.get('../goods/updateIs_marketable.do?ids='+ids+"&is_marketable="+is_marketable);
     }
+
+    //商品数据导出
+    this.createExcel = function(){
+        return $http.get("../goods/createExcel.do");
+    }
 });

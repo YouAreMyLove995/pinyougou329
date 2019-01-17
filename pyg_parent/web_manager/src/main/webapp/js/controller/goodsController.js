@@ -102,4 +102,21 @@ app.controller('goodsController' ,function($scope,$controller,itemCatService   ,
 			}
 		});
 	}
+
+
+    // 商品数据导出
+    $scope.createExcel = function(){
+        goodsService.createExcel().success(function(response){
+            // 判断导出是否成功:
+            if(response.flag==true){
+                // 保存成功
+                alert(response.message);
+                $scope.reloadList();
+            }else{
+                // 导出失败
+                alert(response.message);
+            }
+        });
+    }
+
 });	

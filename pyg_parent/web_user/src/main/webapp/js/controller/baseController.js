@@ -8,27 +8,12 @@ app.controller("baseController",function($scope){
 		 onChange: function(){ // 当页码、每页显示多少条下拉列表发生变化的时候，自动触发了
 			$scope.reloadList();// 重新加载列表
 		 }
-	};
-
-    $scope.paginationConfOne = {
-        currentPage: 1, // 当前页数
-        totalItems: 0, // 总记录数
-        itemsPerPage: 5, // 每页显示多少条记录
-        perPageOptions: [5,10, 20, 30, 40, 50],// 显示多少条下拉列表
-        onChange: function(){ // 当页码、每页显示多少条下拉列表发生变化的时候，自动触发了
-            $scope.reloadListOne();// 重新加载列表
-        }
-    };
-
-    $scope.reloadList = function(){
-		// $scope.findByPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
-		$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+	}; 
+	
+	$scope.reloadList = function(){
+		$scope.findByPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+		// $scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
 	}
-
-    $scope.reloadListOne = function(){
-        // $scope.findByPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
-        $scope.searchOne($scope.paginationConfOne.currentPage,$scope.paginationConfOne.itemsPerPage);
-    }
 	
 	// 定义一个数组:
 	$scope.selectIds = [];

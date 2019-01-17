@@ -58,4 +58,13 @@ public interface SpecificationService {
      * @param status
      */
     void updateStatus(Long[] ids, Integer status);
+
+    /**
+     * 规格列表并且只展示未通过审核的
+     * @param page
+     * @param rows
+     * @param specification
+     * @return
+     */
+    PageResult searchOne(Integer page, Integer rows, Specification specification);
 }

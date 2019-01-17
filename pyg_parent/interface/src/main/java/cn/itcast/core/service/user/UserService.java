@@ -5,6 +5,8 @@ import cn.itcast.core.entity.PageResult;
 import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.user.User;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -51,4 +53,15 @@ public interface UserService {
      * @return
      */
     PageResult search(Integer page, Integer rows, User user);
+
+    /**
+     *用户数据导出
+     */
+    void createExcel() throws IOException;
+
+    /**
+     * 查询活跃人数
+     * @return
+     */
+    Integer searchActive();
 }

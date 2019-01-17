@@ -54,6 +54,19 @@ public class UserController {
         return pageResult;
     }
 
+    //===================================================================================
+
+    /**
+     * 查询活跃人数
+     * @return
+     */
+    @RequestMapping("/searchActive.do")
+    public Integer searchActive(){
+        return userService.searchActive();
+    }
+
+    //===================================================================================
+
 
     /**
      * 审核用户,也就是修改用户状态
@@ -72,4 +85,19 @@ public class UserController {
         }
     }
 
+
+    /**
+     * 用户数据导出
+     * @return
+     */
+    @RequestMapping("/createExcel.do")
+    public Result createExcel(){
+        try {
+            userService.createExcel();
+            return new Result(true,"导出数据成功喽");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"导出数据失败喽");
+        }
+    }
 }

@@ -76,5 +76,14 @@ app.controller('specificationOptionController' ,function($scope,$controller   ,s
 			}			
 		);
 	}
+    //搜索
+    $scope.search1=function(page,rows){
+        specificationOptionService.search1(page,rows,$scope.searchEntity).success(
+            function(response){
+                $scope.list=response.rows;
+                $scope.paginationConf1.totalItems=response.total;//更新总记录数
+            }
+        );
+    }
     
 });	

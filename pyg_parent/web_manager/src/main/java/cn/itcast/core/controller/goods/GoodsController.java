@@ -60,4 +60,19 @@ public class GoodsController {
             return new Result(false,"删除失败喽");
         }
     }
+
+    /**
+     * 商品数据导出
+     * @return
+     */
+    @RequestMapping("/createExcel.do")
+    public Result createExcel(){
+        try {
+            goodsService.createExcel();
+            return new Result(true,"导出数据成功喽");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"导出数据失败喽");
+        }
+    }
 }

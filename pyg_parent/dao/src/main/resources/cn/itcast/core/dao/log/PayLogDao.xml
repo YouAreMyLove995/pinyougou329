@@ -278,4 +278,10 @@
       pay_type = #{payType,jdbcType=VARCHAR}
     where out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
   </update>
+
+  <!--自己写的方法-->
+  <select id="selectByPayTime" parameterType="String"  resultType="cn.itcast.core.pojo.log.PayLog" >
+      SELECT out_trade_no,create_time,pay_time,total_fee,user_id,transaction_id,trade_state,order_list,pay_type
+      FROM tb_pay_log WHERE trade_state = '1' and pay_time LIKE #{time}
+  </select>
 </mapper>

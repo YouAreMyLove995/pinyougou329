@@ -147,5 +147,35 @@ public class BrandServiceImpl implements BrandService {
         }
     }
 
+    /**
+     * 条件查询未通过审核的品牌
+     * @param page
+     * @param rows
+     * @return
+     */
+    @Override
+    public PageResult searchOne(Integer page, Integer rows,Brand brand) {
+        //设置分页参数
+        PageHelper.startPage(page,rows);
+        //设置查询条件
+        BrandQuery brandQuery = new BrandQuery();
+        BrandQuery.Criteria criteria = brandQuery.createCriteria();
+        if (brand.getName() !=null && !"".equals(brand.getName().trim())){
+            criteria.andNameLike("%"+brand.getName().trim()+"%");
+        }
+        if (brand.getFirstChar() != null && !"".equals(brand.getFirstChar().trim())){
+            criteria.andFirstCharEqualTo(brand.getFirstChar().trim());
+        }
+        criteria.andStatusEqualTo(0);
+
+        //根據id降序排列
+        PageHelper.orderBy("id desc");
+
+        //查询结果集
+        Page<Brand> page1 = (Page<Brand>) brandDao.selectByExample(brandQuery);
+        //创建pageResult并填充结果集
+        return new PageResult(page1.getTotal(),page1.getResult());
+    }
+
 
 }

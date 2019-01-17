@@ -1,56 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- 页面meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>商品管理</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
-    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
-    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>ECharts</title>
+    <script src="../js/echarts.js"></script>
+    <script src="../js/plugins/jquery/jquery.min.js"></script>
 
-    <!-- 引入angular的js -->
-    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
-    <!-- 引入分页相关的JS和CSS -->
-    <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
-    <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-
-    <script type="text/javascript" src="../js/base_pagination.js"></script>
-    <script type="text/javascript" src="../js/controller/baseController.js"></script>
-    <script type="text/javascript" src="../js/controller/saleMapController.js"></script>
-    <script type="text/javascript" src="../js/service/saleMapService.js"></script>
 </head>
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="saleMapController" ng-init="findSaleMap()">
+<body>
+<div id="echartsPie" style="width: 800px; height: 600px;"></div>
 
 
+<script type="text/javascript">
+    var echartsPie = echarts.init(document.getElementById('echartsPie'));
 
-<div id="main" style="width: 800px;height:600px;"></div>
-<script>
-    var myChart = echarts.init(document.getElementById('main'));
-    // 绘制图表。
-    $.get('data.json').done(function (data) {
-        myChart.setOption({
-            series:
-                [{
-                    type: 'pie',
-                    radius: '80%',
-                    roseType: 'angle',
-                    data: [
-                        {name: 'A', value: 1212},
-                        {name: 'B', value: 2323},
-                        {name: 'C', value: 1919}
-                    ]
+    // $.get('js/data.json').done(function (data) {
+    $.post("http://localhost:9101/sale/findDaySaleList.do", function(data) {
 
+        // alert(servicedata);
+        /*s//alert(datas);
+        console.log(datas);
+        var data= $.parseJSON(datas);    //将传递过来的json字符串转化为对象
 
+        console.log(data);
+        var servicedata=[];
+        for(var i=0;i<data.categories;i++){
+            var obj=new Object();
+            obj.name=data.categories[i];
+            obj.value=data.data[i];
+            servicedata[i]=obj;
+
+        }*/
+
+        echartsPie.setOption({
+            title : {
+                text: '所有商家每日销售额饼状图',
+                subtext: '感觉还行',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{b} <br/>{c} : {d} %"      //a 系列名称，b 数据项名称，c 数值，d 百分比
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:data.categories
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore : {show: true},
+                    saveAsImage : {show: true}
                 }
-                ]
-        });
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'销售额',
+                    type:'pie',
+                    radius : '55%',//饼图的半径大小
+                    center: ['50%', '60%'],//饼图的位置
+                    data: (function(){
+
+                        var res = [];
+                        var len = 0;
+                        for (var i=0;i<data.categories.length;i++){
+                            res.push({
+                                name: data.categories[i],
+                                value: data.data[i]
+                            });
+                        }
+                        return res;
+                    })()
+                }
+            ]
+        })
     })
+
 </script>
+
 </body>
 </html>

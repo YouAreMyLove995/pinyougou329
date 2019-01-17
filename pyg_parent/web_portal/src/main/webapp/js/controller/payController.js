@@ -33,6 +33,7 @@ app.controller('payController' ,function($scope ,$location,payService){
 					if(response.message=='二维码超时'){
 						$scope.createNative();//重新生成二维码
 					}else{
+
 						location.href="payfail.html";
 					}
 				}				

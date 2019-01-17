@@ -142,4 +142,22 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
             }
         }
     }
+
+    /**
+     * 查询未通过审核的商品模板
+     * @param page
+     * @param rows
+     * @return
+     */
+    @Override
+    public PageResult searchOne(Integer page, Integer rows, TypeTemplate typeTemplate) {
+
+
+        PageHelper.startPage(page,rows);
+        TypeTemplateQuery typeTemplateQuery = new TypeTemplateQuery();
+        typeTemplateQuery.createCriteria().andStatusEqualTo(0);
+        typeTemplateQuery.setOrderByClause("id desc");
+        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(typeTemplateQuery);
+        return new PageResult(p.getTotal(),p.getResult());
+    }
 }

@@ -1,5 +1,8 @@
 package cn.itcast.core.service.sale;
 
+import cn.itcast.core.vo.DaySaleVo;
+
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,6 @@ public interface SaleService {
      * @param date
      * @return
      */
-    List<Map<String,String>> findSaleMap(Date date);
+    Map<Object,Object> findSaleMap(Date date) throws ParseException;
 
 }

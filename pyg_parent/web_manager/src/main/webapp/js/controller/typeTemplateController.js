@@ -82,6 +82,16 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 			}			
 		);
 	}
+
+    //搜索
+    $scope.searchOne=function(page,rows){
+        typeTemplateService.searchOne(page,rows,$scope.searchEntity).success(
+            function(response){
+                $scope.list=response.rows;
+                $scope.paginationConfOne.totalItems=response.total;//更新总记录数
+            }
+        );
+    }
     
 	$scope.brandList={data:[]}
 	// 查询关联的品牌信息:
@@ -118,7 +128,7 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
     $scope.updateStatus = function(status){
         typeTemplateService.updateStatus($scope.selectIds,status).success(function(response){
             if(response.flag){
-                $scope.reloadList();//刷新列表
+                $scope.reloadListOne();//刷新列表
                 $scope.selectIds = [];
             }else{
                 alert(response.message);

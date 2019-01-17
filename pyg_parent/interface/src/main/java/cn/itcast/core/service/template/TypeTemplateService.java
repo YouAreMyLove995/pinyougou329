@@ -56,4 +56,13 @@ public interface TypeTemplateService {
      * @param status
      */
     void updateStatus(Long[] ids, Integer status);
+
+    /**
+     * 查询未通过审核的商品模板
+     * @param page
+     * @param rows
+     * @return
+     */
+    PageResult searchOne(Integer page, Integer rows,TypeTemplate typeTemplate);
+
 }

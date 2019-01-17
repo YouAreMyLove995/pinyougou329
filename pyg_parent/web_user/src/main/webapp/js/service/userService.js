@@ -6,8 +6,8 @@ app.service('userService',function($http){
 		return $http.get('../user/findAll.do');		
 	}
 	//分页 
-	this.findPage=function(page,rows){
-		return $http.get('../user/findPage.do?page='+page+'&rows='+rows);
+	this.search=function(page,rows){
+		return $http.get('../user/search.do?page='+page+'&rows='+rows);
 	}
 	//查询实体
 	this.findOne=function(id){
@@ -25,13 +25,17 @@ app.service('userService',function($http){
 	this.dele=function(ids){
 		return $http.get('../user/delete.do?ids='+ids);
 	}
-	//搜索
-	this.search=function(page,rows,searchEntity){
-		return $http.post('../user/search.do?page='+page+"&rows="+rows, searchEntity);
-	}
+	// //搜索
+	// this.search=function(page,rows,searchEntity){
+	// 	return $http.post('../user/search.do?page='+page+"&rows="+rows, searchEntity);
+	// }
 	//发送验证码
 	this.sendCode=function(phone){
 		return $http.get('../user/sendCode.do?phone='+phone);
 	}
+
+    this.updateStatus = function(ids,status){
+        return $http.get('../user/updateStatus.do?ids='+ids+"&status="+status);
+    }
 	
 });

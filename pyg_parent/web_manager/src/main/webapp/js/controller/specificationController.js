@@ -76,6 +76,26 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
 			}			
 		);
 	}
+
+    //搜索
+    $scope.searchOne=function(page,rows){
+        specificationService.searchOne(page,rows,$scope.searchEntity).success(
+            function(response){
+                $scope.list=response.rows;
+                $scope.paginationConfOne.totalItems=response.total;//更新总记录数
+            }
+        );
+    }
+
+    //搜索
+    $scope.search1=function(page,rows){
+        specificationService.search1(page,rows,$scope.searchEntity).success(
+            function(response){
+                $scope.list=response.rows;
+                $scope.paginationConf.totalItems=response.total;//更新总记录数
+            }
+        );
+    }
 	
 	
 	
@@ -96,7 +116,7 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
     $scope.updateStatus = function(status){
         specificationService.updateStatus($scope.selectIds,status).success(function(response){
             if(response.flag){
-                $scope.reloadList();//刷新列表
+                $scope.reloadListOne();//刷新列表
                 $scope.selectIds = [];
             }else{
                 alert(response.message);

@@ -116,7 +116,7 @@ public class PayServiceImpl implements PayService {
      */
     @Override
     public Map<String, String> queryPayStatus(String out_trade_no,String username) throws Exception {
-        //微信查询订单的借口
+        //微信查询订单的接口
         String url = "https://api.mch.weixin.qq.com/pay/orderquery";
         HashMap<String, String> data = new HashMap<>();
 
@@ -164,6 +164,72 @@ public class PayServiceImpl implements PayService {
                 order.setStatus("2");
                 order.setUpdateTime(new Date());
                 order.setPaymentTime(new Date());
+                orderDao.updateByPrimaryKeySelective(order);
+            }
+
+            //清除缓存中的payLog
+            redisTemplate.boundHashOps("payLog").put(username,null);
+
+        }
+        return map;
+    }
+
+    /**
+     * 关闭订单
+     * @param out_trade_no
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Map<String, String> ClosePayOrder(String out_trade_no, String username) throws Exception {
+        //微信查询订单的接口
+        String url = "https://api.mch.weixin.qq.com/pay/closeorder";
+        HashMap<String, String> data = new HashMap<>();
+
+        //封装借口需要的参数
+//        公众账号ID	appid	是	String(32)	wxd678efh567hg6787	微信支付分配的公众账号ID（企业号corpid即为此appId）
+        data.put("appid",appid);
+//        商户号	mch_id	是	String(32)	1230000109	微信支付分配的商户号
+        data.put("mch_id",partner);
+//        商户订单号	out_trade_no	String(32)	20150806125346	商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|*@ ，且在同一个商户号下唯一。 详见商户订单号
+        data.put("out_trade_no",out_trade_no);
+//        随机字符串	nonce_str	是	String(32)	C380BEC2BFD727A4B6845133519F3AD6	随机字符串，不长于32位。推荐随机数生成算法
+        data.put("nonce_str",WXPayUtil.generateNonceStr());
+//        签名	sign	是	String(32)	5K8264ILTKCH16CQ2502SI8ZNMTM67VS	通过签名算法计算得出的签名值，详见签名生成算法
+
+        //要用httpClient模拟发送请求
+        HttpClient httpClient = new HttpClient(url);
+        //首先需要把map转为xml
+        String xmlParam = WXPayUtil.generateSignedXml(data, partnerkey);
+        httpClient.setHttps(true);//支持https
+        httpClient.setXmlParam(xmlParam);//微信下单需要的数据
+        httpClient.post();//请求方式为post
+
+        //获取结果转为map返回
+        String content = httpClient.getContent();
+        Map<String, String> map = WXPayUtil.xmlToMap(content);
+
+        //更新日志表
+        if ("SUCCESS".equals(map.get("return_code"))){
+            //更新支付日志表
+            PayLog payLog = new PayLog();
+            payLog.setOutTradeNo(out_trade_no);//设置主键，用于更新
+            payLog.setPayTime(new Date());//支付时间
+            payLog.setTransactionId(map.get("transaction_id"));//交易流水号
+            payLog.setTradeState("2");//更改支付状态
+            payLogDao.updateByPrimaryKeySelective(payLog);
+
+            PayLog newPayLog = payLogDao.selectByPrimaryKey(out_trade_no);
+
+            //更新订单表
+            String orderList = newPayLog.getOrderList();
+            String[] orderArray = orderList.split(", ");
+            for (String orderId : orderArray) {
+                Order order = new Order();
+                order.setOrderId(Long.parseLong(orderId));
+                order.setStatus("6");
+                order.setUpdateTime(new Date());
                 orderDao.updateByPrimaryKeySelective(order);
             }
 

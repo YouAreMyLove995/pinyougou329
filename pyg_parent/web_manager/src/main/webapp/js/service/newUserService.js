@@ -22,4 +22,14 @@ app.service('newUserService',function($http){
     this.updateStatus = function(ids,status){
         return $http.get('../user/updateStatus.do?ids='+ids+"&status="+status);
     }
+
+    //用户数据导出
+    this.createExcel = function(){
+        return $http.get("../user/createExcel.do");
+    }
+
+    //查询活跃人数
+    this.searchActive=function(id){
+        return $http.get("../user/searchActive.do");
+    }
 });

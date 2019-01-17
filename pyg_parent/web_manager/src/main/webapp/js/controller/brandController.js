@@ -80,6 +80,15 @@ app.controller("brandController",function($scope,$controller,brandService){
 		});
 	}
 
+    // 假设定义一个查询的实体：searchEntity
+    $scope.searchOne = function(page,rows){
+        // 向后台发送请求获取数据:
+        brandService.searchOne(page,rows,$scope.searchEntity).success(function(response){
+            $scope.paginationConfOne.totalItems = response.total;
+            $scope.list = response.rows;
+        });
+    }
+
 
     //=================================================================================================================
     // 显示状态
@@ -89,7 +98,7 @@ app.controller("brandController",function($scope,$controller,brandService){
     $scope.updateStatus = function(status){
         brandService.updateStatus($scope.selectIds,status).success(function(response){
             if(response.flag){
-                $scope.reloadList();//刷新列表
+                $scope.reloadListOne();//刷新列表
                 $scope.selectIds = [];
             }else{
                 alert(response.message);

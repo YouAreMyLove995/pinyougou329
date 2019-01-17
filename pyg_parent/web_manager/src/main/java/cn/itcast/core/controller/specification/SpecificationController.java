@@ -33,6 +33,19 @@ public class SpecificationController {
         return pageResult;
     }
 
+    /**
+     * 规格列表并且只展示未通过审核的
+     * @param page
+     * @param rows
+     * @param specification
+     * @return
+     */
+    @RequestMapping("/searchOne.do")
+    public PageResult searchOne(Integer page, Integer rows, @RequestBody Specification specification){
+        PageResult pageResult = specificationService.searchOne(page,rows,specification);
+        return pageResult;
+    }
+
 
     /**
      * 添加规格和规格选项

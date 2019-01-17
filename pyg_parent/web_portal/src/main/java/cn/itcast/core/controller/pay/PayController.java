@@ -38,14 +38,18 @@ public class PayController {
             int time = 0;
             while (true){
                 Map<String, String> map = payService.queryPayStatus(out_trade_no,username);
+
                 if ("SUCCESS".equals(map.get("trade_state"))){
                     return new Result(true,"支付成功啦");
                 }else {
                     Thread.sleep(5000);
                     time++;
                 }
-                if (time > 360){
-                    return new Result(false,"二维码超时喽");
+                if (time > 60){
+                    Map<String, String> closeMap = payService.ClosePayOrder(out_trade_no, username);
+                    if ("SUCCESS".equals(map.get("return_code"))){
+                        return new Result(false,"支付超时喽,订单已关闭");
+                    }
                 }
             }
         } catch (Exception e) {

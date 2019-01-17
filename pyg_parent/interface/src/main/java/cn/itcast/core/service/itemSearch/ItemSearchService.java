@@ -9,7 +9,7 @@ public interface ItemSearchService {
      * @param searchMap
      * @return
      */
-    Map<String,Object> search(Map<String, String> searchMap);
+    Map<String,Object> search(Map<String, String> searchMap,String name);
 
     /**
      * 将商品信息保存到索引库中

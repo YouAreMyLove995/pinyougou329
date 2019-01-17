@@ -27,11 +27,11 @@
 	<script type="text/javascript" src="../js/service/newUserService.js"></script>
 </head>
 
-<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="userController" ng-init="searchEntity={status:'1'}">
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="userController" ng-init="searchActive()">
 <!-- .box-body -->
 
 <div class="box-header with-border">
-	<h3 class="box-title">用户审核&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp用户个数:{{paginationConf.totalItems}}</h3>
+	<h3 class="box-title">用户管理&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp用户个数:{{paginationConf.totalItems}}&nbsp&nbsp&nbsp&nbsp&nbsp活跃人数:{{activeNum}}个</h3>
 </div>
 
 <div class="box-body">
@@ -45,6 +45,7 @@
 				<div class="btn-group">
 					<button type="button" ng-click="updateStatus('0')" class="btn btn-default" title="冻结用户" ><i class="fa fa-check"></i> 冻结用户</button>
 					<button type="button" ng-click="updateStatus('1')" class="btn btn-default" title="解除冻结" ><i class="fa fa-ban"></i> 解除冻结</button>
+					<button type="button" ng-click="createExcel()" class="btn btn-default" title="用户数据导出" ><i class="fa fa-ban"></i> 用户数据导出</button>
 					<button type="button" class="btn btn-default" title="刷新" ><i class="fa fa-refresh"></i> 刷新</button>
 				</div>
 			</div>

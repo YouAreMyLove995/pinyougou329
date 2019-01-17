@@ -4,6 +4,9 @@ import cn.itcast.core.entity.PageResult;
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.vo.GoodsVo;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public interface GoodsService {
 
     /**
@@ -64,5 +67,10 @@ public interface GoodsService {
      * @param is_marketable
      */
     void updateIs_marketable(Long[] ids, String is_marketable);
+
+    /**
+     * 商品数据导出
+     */
+    void createExcel() throws IOException;
 
 }

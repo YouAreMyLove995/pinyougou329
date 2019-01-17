@@ -69,4 +69,12 @@ public interface BrandService {
      * @param status
      */
     void updateStatus(Long[] ids, Integer status);
+
+    /**
+     * 条件查询未通过审核的品牌
+     * @param page
+     * @param rows
+     * @return
+     */
+    PageResult searchOne(Integer page, Integer rows,Brand brand);
 }

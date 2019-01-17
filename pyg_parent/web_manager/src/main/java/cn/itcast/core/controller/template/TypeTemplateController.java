@@ -30,6 +30,18 @@ public class TypeTemplateController {
     }
 
     /**
+     * 查询未通过审核的商品模板
+     * @param page
+     * @param rows
+     * @return
+     */
+    @RequestMapping("/searchOne.do")
+    public PageResult searchOne(Integer page, Integer rows,@RequestBody TypeTemplate typeTemplate){
+        PageResult pageResult = typeTemplateService.searchOne(page,rows,typeTemplate);
+        return pageResult;
+    }
+
+    /**
      * 添加商品模板
      * @return
      */

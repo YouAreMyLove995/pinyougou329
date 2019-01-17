@@ -30,6 +30,11 @@ app.service('typeTemplateService',function($http){
 		return $http.post('../typeTemplate/search.do?page='+page+"&rows="+rows, searchEntity);
 	}
 
+    //搜索
+    this.searchOne=function(page,rows,searchEntity){
+        return $http.post('../typeTemplate/searchOne.do?page='+page+"&rows="+rows,searchEntity);
+    }
+
 //=================================================================================================================
     this.updateStatus = function(ids,status){
         return $http.get('../typeTemplate/updateStatus.do?ids='+ids+"&status="+status);

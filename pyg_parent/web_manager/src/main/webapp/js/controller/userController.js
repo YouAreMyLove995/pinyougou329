@@ -22,6 +22,13 @@ app.controller('userController' ,function($scope,$controller   ,newUserService){
 		);
 	}
 
+    //查询活跃人数
+    $scope.searchActive = function(){
+        newUserService.searchActive().success(function(response){
+            $scope.activeNum = response;
+        });
+    }
+
 
 	
 	//查询实体 
@@ -44,6 +51,7 @@ app.controller('userController' ,function($scope,$controller   ,newUserService){
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
+
 	}
 
     // 显示状态
@@ -56,6 +64,22 @@ app.controller('userController' ,function($scope,$controller   ,newUserService){
                 $scope.reloadList();//刷新列表
                 $scope.selectIds = [];
             }else{
+                alert(response.message);
+            }
+        });
+    }
+
+
+    // 用户数据导出
+    $scope.createExcel = function(){
+    	newUserService.createExcel().success(function(response){
+            // 判断导出是否成功:
+            if(response.flag==true){
+                // 保存成功
+                alert(response.message);
+                $scope.reloadList();
+            }else{
+                // 导出失败
                 alert(response.message);
             }
         });

@@ -43,6 +43,18 @@ public class BrandController {
         return p;
     }
 
+    /**
+     * 条件查询未通过审核的品牌
+     * @param page
+     * @param rows
+     * @return
+     */
+    @RequestMapping("/searchOne.do")
+    public PageResult searchOne(Integer page,Integer rows,@RequestBody Brand brand){
+        PageResult pageResult = brandService.searchOne(page, rows,brand);
+        return pageResult;
+    }
+
 
     /**
      * 条件查询

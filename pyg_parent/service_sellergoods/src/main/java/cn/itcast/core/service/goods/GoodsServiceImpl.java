@@ -13,12 +13,15 @@ import cn.itcast.core.pojo.good.GoodsDesc;
 import cn.itcast.core.pojo.good.GoodsQuery;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.item.ItemQuery;
+import cn.itcast.core.pojo.user.User;
 import cn.itcast.core.service.staticPage.StaticPageService;
+import cn.itcast.core.util.poi.ExcelUtil;
 import cn.itcast.core.vo.GoodsVo;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.jms.core.JmsTemplate;
@@ -26,6 +29,10 @@ import org.springframework.jms.core.MessageCreator;
 
 import javax.annotation.Resource;
 import javax.jms.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -329,6 +336,15 @@ public class GoodsServiceImpl implements GoodsService{
                 if ("0".equals(is_marketable) && "1".equals(goods1.getAuditStatus())){
                     goodsDao.updateByPrimaryKeySelective(goods);
 
+                    System.out.println(id);
+                    //删除对应的静态页面
+                    File file = new File("G:\\IDEA_workspace\\PYG_2018_12_10_two\\pyg_parent\\service_page\\target\\service_page" + "/" + id + ".html");
+
+                    if (file.exists()){
+                        file.delete();
+                    }
+
+                    //删除对应的索引库
                     jmsTemplate.send(queueSolrDeleteDestination, new MessageCreator() {
                         @Override
                         public Message createMessage(Session session) throws JMSException {
@@ -339,6 +355,54 @@ public class GoodsServiceImpl implements GoodsService{
                 }
             }
         }
+    }
+
+    /**
+     * 商品数据导出
+     */
+    @Override
+    public void createExcel() throws IOException {
+        //查询所有用户
+        List<Goods> goods = goodsDao.selectByExample(null);
+
+
+        String sheetName = "商品数据表";
+        String[] title = {"商品主键","商家ID","SPU名","默认SKU","状态","是否上架","品牌","副标题","一级类目","二级类目",
+                "三级类目","小图","商城价","分类模板ID","是否启用规格","是否删除"};
+
+
+        //获取所需要的数据
+
+        String [][] content = new String[goods.size()][];
+
+        for (int i = 0; i < goods.size(); i++) {
+            content[i] = new String[title.length];
+            Goods goodsOne = goods.get(i);
+            content[i][0] = String.valueOf(goodsOne.getId());
+            content[i][1] = goodsOne.getSellerId();
+            content[i][2] = goodsOne.getGoodsName();
+            content[i][3] = String.valueOf(goodsOne.getDefaultItemId());
+            content[i][4] = goodsOne.getAuditStatus();
+            content[i][5] = goodsOne.getIsMarketable();
+            content[i][6] = String.valueOf(goodsOne.getBrandId());
+            content[i][7] = goodsOne.getCaption();
+            content[i][8] = String.valueOf(goodsOne.getCategory1Id());
+            content[i][9] = String.valueOf(goodsOne.getCategory2Id());
+            content[i][10] = String.valueOf(goodsOne.getCategory3Id());
+            content[i][11] = goodsOne.getSmallPic();
+            content[i][12] = goodsOne.getPrice().toString();
+            content[i][13] = String.valueOf(goodsOne.getTypeTemplateId());
+            content[i][14] = goodsOne.getIsEnableSpec();
+            content[i][15] = goodsOne.getIsDelete();
+        }
+
+        //填充数据
+        Workbook wb = ExcelUtil.CreatExcel(sheetName,title,content,null);
+
+        //创建输出流生成数据表
+        FileOutputStream os = new FileOutputStream("G:\\nihao\\商品数据表"+System.currentTimeMillis()+".xls");
+        wb.write(os);
+        os.close();
     }
 
 

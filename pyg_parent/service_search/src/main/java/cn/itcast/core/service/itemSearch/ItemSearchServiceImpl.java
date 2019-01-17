@@ -1,8 +1,11 @@
 package cn.itcast.core.service.itemSearch;
 
 import cn.itcast.core.dao.item.ItemDao;
+import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.item.Item;
 import cn.itcast.core.pojo.item.ItemQuery;
+import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import cn.itcast.core.service.itemSearch.ItemSearchService;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
@@ -14,6 +17,7 @@ import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.*;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -29,13 +33,37 @@ public class ItemSearchServiceImpl implements ItemSearchService {
     @Resource
     private ItemDao itemDao;
 
+    @Resource
+    private UserDao userDao;
+
     /**
      * 前台系统的全文检索
      * @param searchMap
      * @return
      */
     @Override
-    public Map<String, Object> search(Map<String, String> searchMap) {
+    public Map<String, Object> search(Map<String, String> searchMap,String name) {
+
+        //==================================================================
+        if (name != null){
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String today = format.format(new Date());
+
+            UserQuery userQuery = new UserQuery();
+            userQuery.createCriteria().andUsernameEqualTo(name);
+            List<User> users = userDao.selectByExample(userQuery);
+            for (User user : users) {
+                Long id = user.getId();
+                redisTemplate.opsForValue().setBit("daily_active_users:"+today,id,true);
+            }
+        }
+
+        //==================================================================
+
+
+
+
         //创建一个Map封装结果集
         Map<String,Object> resultMap = new HashMap<>();
         //处理关键字----去除空格
